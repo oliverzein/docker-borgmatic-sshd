@@ -1,0 +1,9 @@
+#!/usr/bin/execlineb -P
+exec /bin/sh -c "set -eu
+if ! id borg >/dev/null 2>&1; then
+  adduser -D -s /bin/bash borg
+  passwd -u borg >/dev/null 2>&1 || true
+fi
+install -d -m 0700 -o borg -g borg /home/borg
+install -d -m 0700 -o borg -g borg /home/borg/.ssh
+exit 0"

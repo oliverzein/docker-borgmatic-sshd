@@ -6,3 +6,4 @@ data/repository/
 data/borgmatic.d/
 !data/borgmatic.d/config.yaml
 localtest/
+localtest_OLD/

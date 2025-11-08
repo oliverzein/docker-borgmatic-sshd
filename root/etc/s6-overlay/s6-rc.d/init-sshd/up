@@ -1,0 +1,30 @@
+#!/usr/bin/execlineb -P
+exec /bin/sh -c "set -eu
+mkdir -p /sshdkeys
+install -d -m 0700 -o root -g root /sshdkeys/host
+
+if [ ! -f /sshdkeys/host/ssh_host_rsa_key ]; then
+  ssh-keygen -t rsa -b 4096 -N '' -f /sshdkeys/host/ssh_host_rsa_key
+fi
+if [ ! -f /sshdkeys/host/ssh_host_ed25519_key ]; then
+  ssh-keygen -t ed25519 -N '' -f /sshdkeys/host/ssh_host_ed25519_key
+fi
+
+for key in /sshdkeys/host/ssh_host_rsa_key /sshdkeys/host/ssh_host_ed25519_key; do
+  if [ -f \"${key}\" ]; then
+    chown root:root \"${key}\"
+    chmod 0600 \"${key}\"
+  fi
+  if [ -f \"${key}.pub\" ]; then
+    chown root:root \"${key}.pub\"
+    chmod 0644 \"${key}.pub\"
+  fi
+done
+
+touch /sshdkeys/authorized_keys
+chown root:root /sshdkeys/authorized_keys
+chmod 0600 /sshdkeys/authorized_keys
+
+mkdir -p /run/sshd
+chmod 0755 /run/sshd
+exit 0"

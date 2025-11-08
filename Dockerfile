@@ -3,7 +3,7 @@
 FROM python:3.14.0-alpine3.22 AS base
 ARG TARGETARCH
 
-LABEL maintainer='borgmatic-collective'
+LABEL maintainer='github.com/oliverzein'
 
 FROM base AS base-amd64
 ENV S6_OVERLAY_ARCH=x86_64
@@ -60,7 +60,8 @@ RUN <<EOF
         sshfs               \
         sqlite              \
         tzdata              \
-        xxhash
+        xxhash              \
+        openssh-server
     apk upgrade --no-cache
 EOF
 
@@ -79,5 +80,6 @@ COPY --chmod=744 --link root/ /
 VOLUME /root/.local/state/borgmatic
 VOLUME /root/.config/borg
 VOLUME /root/.cache/borg
+VOLUME /sshdkeys
 
 ENTRYPOINT [ "/init" ]
